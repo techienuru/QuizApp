@@ -38,7 +38,7 @@
 
 .scoresBreakdownSection {
   .breakdownCard {
-    background: var(--gradient-color);
+    background: var(--linear-gradient);
     border: none;
   }
 }
