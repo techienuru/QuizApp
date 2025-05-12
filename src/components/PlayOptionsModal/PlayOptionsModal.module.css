@@ -21,7 +21,7 @@
 }
 
 .modalContent {
-  background: var(--gradient-color);
+  background: var(--linear-gradient);
   color: var(--light-cyan);
   .modalHeader {
     .modalTitle {
