@@ -50,26 +50,38 @@ const Result = () => {
               </div>
             </section>
 
-            <section className="cta-btns-section bg-success">
+            <section className={`${styles.ctaBtnsSection}`}>
               <div className="container">
                 <div className="d-flex justify-content-around flex-wrap gap-sm-5">
-                  <a href="#" className={`btn btn-warning ${styles.ctaItem}`}>
-                    <span>
-                      <i class="fa fa-500px" aria-hidden="true"></i>
-                    </span>
-                    <span>Play Again</span>
+                  <a href="#" className={`${styles.ctaItemLink}`}>
+                    <p>
+                      <i
+                        className={`fas fa-rotate-right ${styles.ctaItemIcon} ${styles.playAgain}`}
+                        aria-hidden="true"
+                        title="Play Again"
+                      ></i>
+                    </p>
+                    <p className={`${styles.ctaItemText}`}>Play Again</p>
                   </a>
-                  <a href="#" className={`btn btn-warning ${styles.ctaItem}`}>
-                    <span>
-                      <i class="fa fa-500px" aria-hidden="true"></i>
-                    </span>
-                    <span>Play Again</span>
+                  <a href="#" className={`${styles.ctaItemLink}`}>
+                    <p>
+                      <i
+                        className={`fas fa-home ${styles.ctaItemIcon} ${styles.home}`}
+                        aria-hidden="true"
+                        title="Go Home"
+                      ></i>
+                    </p>
+                    <p className={`${styles.ctaItemText}`}>Home</p>
                   </a>
-                  <a href="#" className={`btn btn-warning ${styles.ctaItem}`}>
-                    <span>
-                      <i class="fa fa-500px" aria-hidden="true"></i>
-                    </span>
-                    <span>Play Again</span>
+                  <a href="#" className={`${styles.ctaItemLink}`}>
+                    <p>
+                      <i
+                        className={`fas fa-trophy ${styles.ctaItemIcon} ${styles.leaderboard}`}
+                        aria-hidden="true"
+                        title="Leaderboard"
+                      ></i>
+                    </p>
+                    <p className={`${styles.ctaItemText}`}>Leaderboard</p>
                   </a>
                 </div>
               </div>

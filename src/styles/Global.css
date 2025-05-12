@@ -10,3 +10,9 @@
     hsla(186, 100%, 69%, 1) 100%
   );
 }
+
+* {
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  font-family: "Twinkle Star", cursive;
+}

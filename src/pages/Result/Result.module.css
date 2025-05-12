@@ -9,7 +9,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 70%;
+  height: 60%;
   background-color: var(--russian-violet);
   border-radius: 0px 0px 30px 30px;
   z-index: -1;
@@ -39,14 +39,68 @@
 .scoresBreakdownSection {
   .breakdownCard {
     background: var(--gradient-color);
+    border: none;
   }
 }
 
-.scoresbreakdownItem:nth-child(1) {
+.scoresbreakdownItem {
   p {
     span:first-child {
+      font-weight: bolder;
     }
     span:last-child {
+      font-style: italic;
     }
+  }
+}
+.scoresbreakdownItem:nth-child(1),
+.scoresbreakdownItem:nth-child(2) {
+  p {
+    span:first-child {
+      color: var(--light-cyan);
+    }
+  }
+}
+.scoresbreakdownItem:nth-child(3) {
+  p {
+    span:first-child {
+      color: var(--persian-green);
+    }
+  }
+}
+.scoresbreakdownItem:nth-child(4) {
+  p {
+    span:first-child {
+      color: var(--rusty-red);
+    }
+  }
+}
+
+.ctaItemLink {
+  text-decoration: none;
+  text-align: center;
+
+  .ctaItemIcon {
+    border-radius: 50%;
+    padding: 1.5rem;
+    text-align: center;
+    font-size: 1rem;
+    color: var(--light-cyan);
+  }
+
+  .ctaItemIcon.playAgain {
+    background-color: var(--persian-green);
+  }
+  .ctaItemIcon.home {
+    background-color: var(--rusty-red);
+  }
+  .ctaItemIcon.leaderboard {
+    background-color: hsla(217, 100%, 50%, 1);
+  }
+
+  .ctaItemText {
+    color: var(--russian-violet);
+    letter-spacing: 0.1rem;
+    margin-top: 1.5rem;
   }
 }
