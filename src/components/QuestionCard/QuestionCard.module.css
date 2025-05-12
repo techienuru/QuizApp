@@ -1,0 +1,40 @@
+.questionCard {
+  box-shadow: 0px 0px 3px rgba(129, 120, 120, 0.726);
+}
+.questionCard:hover {
+  background: var(--linear-gradient);
+  color: white;
+}
+
+.questionCardTitle {
+  .questionNo {
+    color: var(--russian-violet);
+    text-shadow: 0px 0px 1px var(--russian-violet);
+    font-size: clamp(0.8375rem, 0.7654rem + 0.4767vw, 1.25rem);
+  }
+  .timeRemaining {
+    text-shadow: 0px 0px 1px var(--russian-violet);
+    font-size: clamp(0.9375rem, 0.8654rem + 0.5767vw, 1.25rem);
+  }
+  .quitBtn {
+    font-size: clamp(0.9375rem, 0.8654rem + 0.5767vw, 1.25rem);
+    color: var(--rusty-red);
+    text-shadow: 0px 0px 1px var(--rusty-red);
+  }
+}
+
+.questionCardBody {
+  .question {
+    margin-bottom: 1.5rem;
+
+    span {
+      font-weight: bolder;
+      text-shadow: 0px 0px 0.5px var(--rusty-red);
+    }
+  }
+  .options {
+    .formCheck {
+      margin-bottom: 1rem;
+    }
+  }
+}
