@@ -1,0 +1,12 @@
+:root {
+  --russian-violet: #0d0630;
+  --prussian-blue: #18314f;
+  --persian-green: #339989;
+  --light-cyan: #daf5ff;
+  --rusty-red: #de3c4b;
+  --gradient-color: linear-gradient(
+    90deg,
+    hsla(217, 100%, 50%, 1) 0%,
+    hsla(186, 100%, 69%, 1) 100%
+  );
+}
