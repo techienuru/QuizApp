@@ -1,16 +1,16 @@
-// import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+// import { useEffect } from "react";
+import Home from "./pages/Home/Home.jsx";
+import PlayOptionsModal from "./components/Header/PlayOptionsModal/PlayOptionsModal.jsx";
+import Result from "./pages/Result/Result.jsx";
+// import { useState } from "react";
 
 function App() {
   return (
     <>
-      <header>
-        <h1 className="bg-danger">Quiz App</h1>
-      </header>
-      <main>
-        <h2 className="bg-secondary">Welcome to my Quiz App</h2>
-      </main>
-      <footer></footer>
+      <Result />
+      {/* <Home /> */}
+      <PlayOptionsModal />
     </>
   );
 }

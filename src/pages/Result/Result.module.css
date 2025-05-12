@@ -1,0 +1,52 @@
+.result {
+  background-color: white;
+  position: relative;
+  z-index: 1;
+}
+.result::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70%;
+  background-color: var(--russian-violet);
+  border-radius: 0px 0px 30px 30px;
+  z-index: -1;
+}
+.scoresSection {
+  .scoresCardOuter {
+    background-color: hsla(217, 100%, 50%, 1);
+    padding: 1rem;
+    border-radius: 50%;
+    .scoresCardInner {
+      background-color: var(--russian-violet);
+      border-radius: 50%;
+      padding: 3rem;
+      p {
+        text-align: center;
+      }
+      p:first-child {
+        font-size: 1.5rem;
+      }
+      p:last-child {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+
+.scoresBreakdownSection {
+  .breakdownCard {
+    background: var(--gradient-color);
+  }
+}
+
+.scoresbreakdownItem:nth-child(1) {
+  p {
+    span:first-child {
+    }
+    span:last-child {
+    }
+  }
+}
