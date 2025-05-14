@@ -1,17 +1,21 @@
-import { useParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import QuestionCard from "../../components/QuestionCard/QuestionCard";
 import styles from "./Quiz.module.css";
 import { useEffect, useState } from "react";
 const Quiz = () => {
-  const { noOfQuestion, categoryId, difficulty, questionType } = useParams();
+  const [searchParams] = useSearchParams();
+  const noOfQuestion = searchParams.get("noOfQuestion");
+  const categoryId = searchParams.get("categoryId");
+  const difficulty = searchParams.get("difficulty");
+  const questionType = searchParams.get("questionType");
+
   const [quizQues, setQuizQues] = useState();
+  const [isQuesLoading, setIsQuesLoading] = useState(true);
 
   useEffect(() => {
-    const categoryParam = categoryId !== "any" ? `&category=${categoryId}` : "";
-    const difficultyParam =
-      difficulty !== "any" ? `&difficulty=${difficulty}` : "";
-    const questionTypeParam =
-      questionType !== "any" ? `&type=${questionType}` : "";
+    const categoryParam = categoryId ? `&category=${categoryId}` : "";
+    const difficultyParam = difficulty ? `&difficulty=${difficulty}` : "";
+    const questionTypeParam = questionType ? `&type=${questionType}` : "";
 
     const fetchQuizQues = async () => {
       try {
@@ -19,8 +23,6 @@ const Quiz = () => {
           `https://opentdb.com/api.php?amount=${noOfQuestion}${categoryParam}${difficultyParam}${questionTypeParam}`
         );
         const data = await res.json();
-
-        setQuizQues(data.results);
 
         switch (data.response_code) {
           case 1:
@@ -47,13 +49,16 @@ const Quiz = () => {
           default:
             break;
         }
+
+        setQuizQues(data.results);
+        setIsQuesLoading(false);
       } catch (err) {
         console.log(err);
       }
     };
 
     fetchQuizQues();
-  }, []);
+  }, [noOfQuestion, categoryId, difficulty, questionType]);
 
   return (
     <>
@@ -63,16 +68,23 @@ const Quiz = () => {
             <div className="d-flex justify-content-center">
               <div className={`text-center`}>
                 <p>
-                  Category Name <span>(Difficulty)</span>
+                  {categoryId || "Category Name"}{" "}
+                  <span>({difficulty || "Difficulty"})</span>
                 </p>
-                <p>Multiple Choice</p>
+                <p>{questionType || "Question Type"}</p>
               </div>
             </div>
           </section>
 
           <section className={`mb-3 ${styles.questionCardSection}`}>
             <div className="container p-0">
-              {quizQues && <QuestionCard quizQues={quizQues} />}
+              {isQuesLoading ? (
+                "Question is Loading..."
+              ) : quizQues && quizQues.length > 0 ? (
+                <QuestionCard quizQues={quizQues} />
+              ) : (
+                <p>No Question available. Try adjusting quiz preferences.</p>
+              )}
             </div>
           </section>
 

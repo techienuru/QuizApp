@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import styles from "./PlayOptionsModal.module.css";
+import { useNavigate } from "react-router-dom";
 
 const PlayOptionsModal = ({ closeModal }) => {
-  const [categoryId, setCategoryId] = useState(undefined);
+  const [categoryId, setCategoryId] = useState("");
   const [maxQuestion, setMaxQuestion] = useState(50);
   const [noOfQuestion, setNoOfQuestion] = useState(10);
-  const [difficulty, setDifficulty] = useState("any");
-  const [questionType, setQuestionType] = useState("any");
+  const [difficulty, setDifficulty] = useState("");
+  const [questionType, setQuestionType] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMaxQuestion = async () => {
@@ -25,7 +28,11 @@ const PlayOptionsModal = ({ closeModal }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    window.location.href = `/quiz/${noOfQuestion}/${categoryId}/${difficulty}/${questionType}`;
+
+    navigate(
+      `/quiz?noOfQuestion=${noOfQuestion}&categoryId=${categoryId}&difficulty=${difficulty}&questionType=${questionType}`
+    );
+    closeModal();
   };
 
   return (
@@ -53,7 +60,6 @@ const PlayOptionsModal = ({ closeModal }) => {
                 onChange={(e) => {
                   setCategoryId(e.target.value);
                 }}
-                required
               >
                 <option value="">Any Category</option>
                 <option value="9">General Knowledge</option>
@@ -112,9 +118,8 @@ const PlayOptionsModal = ({ closeModal }) => {
                 onChange={(e) => {
                   setDifficulty(e.target.value);
                 }}
-                required
               >
-                <option value="any">Any Difficulty</option>
+                <option value="">Any Difficulty</option>
                 <option value="easy">Easy</option>
                 <option value="medium">Medium</option>
                 <option value="hard">Hard</option>
@@ -130,9 +135,8 @@ const PlayOptionsModal = ({ closeModal }) => {
                 onChange={(e) => {
                   setQuestionType(e.target.value);
                 }}
-                required
               >
-                <option value="any">Any Type</option>
+                <option value="">Any Type</option>
                 <option value="multiple">Multiple Choice</option>
                 <option value="boolean">True/False</option>
               </select>
