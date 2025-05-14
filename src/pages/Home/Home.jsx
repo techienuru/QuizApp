@@ -1,6 +1,6 @@
 // import { useState } from "react";
 import styles from "./Home.module.css";
-const Home = () => {
+const Home = ({ openModal }) => {
   return (
     <>
       <main>
@@ -17,7 +17,11 @@ const Home = () => {
             <div
               className={`d-flex gap-3 justify-content-center ${styles.CtaBtnContainer}`}
             >
-              <button type="button" className={`btn ${styles.playBtn}`}>
+              <button
+                type="button"
+                className={`btn ${styles.playBtn}`}
+                onClick={openModal}
+              >
                 Play Now
               </button>
             </div>

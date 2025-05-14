@@ -9,7 +9,7 @@
   justify-content: center;
   align-items: center;
   animation: popOut 0.5s ease-in-out 0s forwards;
-  display: none;
+  /* display: none; */
 }
 @keyframes popOut {
   0% {

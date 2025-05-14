@@ -1,6 +1,23 @@
+import { useParams } from "react-router-dom";
 import QuestionCard from "../../components/QuestionCard/QuestionCard";
 import styles from "./Quiz.module.css";
+import { useEffect, useState } from "react";
 const Quiz = () => {
+  const { noOfQuestion, categoryId, difficulty, questionType } = useParams();
+  const [quizQues, setQuizQues] = useState();
+
+  useEffect(() => {
+    const fetchQuizQues = async () => {
+      const res = await fetch(
+        `https://opentdb.com/api.php?amount=${noOfQuestion}&category=${categoryId}&difficulty=${difficulty}&type=${questionType}`
+      );
+      const data = await res.json();
+      console.log(data);
+    };
+
+    fetchQuizQues();
+  }, [quizQues]);
+
   return (
     <>
       <main className={`${styles.quiz}`}>
@@ -18,7 +35,7 @@ const Quiz = () => {
 
           <section className={`mb-3 ${styles.questionCardSection}`}>
             <div className="container p-0">
-              <QuestionCard />
+              <QuestionCard quizQues={quizQues} />
             </div>
           </section>
 
