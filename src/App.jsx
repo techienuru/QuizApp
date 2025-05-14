@@ -24,14 +24,11 @@ function App() {
           <Route path="/">
             <Route index element={<Home openModal={openModal} />}></Route>
             <Route path="/result" element={<Result />}></Route>
-            <Route
-              path="/quiz/:noOfQuestion/:categoryId/:difficulty/:questionType"
-              element={<Quiz />}
-            ></Route>
+            <Route path="/quiz" element={<Quiz />}></Route>
           </Route>
         </Routes>
+        {isModalOpen && <PlayOptionsModal closeModal={closeModal} />}
       </BrowserRouter>
-      {isModalOpen && <PlayOptionsModal closeModal={closeModal} />}
     </>
   );
 }
