@@ -1,6 +1,7 @@
 import styles from "./QuestionCard.module.css";
 
-const QuestionCard = () => {
+const QuestionCard = (quizQues) => {
+  console.log(quizQues);
   return (
     <>
       <div className={`card ${styles.questionCard}`}>
