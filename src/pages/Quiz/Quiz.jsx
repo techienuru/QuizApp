@@ -7,16 +7,53 @@ const Quiz = () => {
   const [quizQues, setQuizQues] = useState();
 
   useEffect(() => {
+    const categoryParam = categoryId !== "any" ? `&category=${categoryId}` : "";
+    const difficultyParam =
+      difficulty !== "any" ? `&difficulty=${difficulty}` : "";
+    const questionTypeParam =
+      questionType !== "any" ? `&type=${questionType}` : "";
+
     const fetchQuizQues = async () => {
-      const res = await fetch(
-        `https://opentdb.com/api.php?amount=${noOfQuestion}&category=${categoryId}&difficulty=${difficulty}&type=${questionType}`
-      );
-      const data = await res.json();
-      console.log(data);
+      try {
+        const res = await fetch(
+          `https://opentdb.com/api.php?amount=${noOfQuestion}${categoryParam}${difficultyParam}${questionTypeParam}`
+        );
+        const data = await res.json();
+
+        setQuizQues(data.results);
+
+        switch (data.response_code) {
+          case 1:
+            throw Error(
+              `The API doesn't have enough questions for the category you selected!\nPlease reduce the number of Questions you inputed earlier`
+            );
+
+          case 2:
+            throw Error(
+              `You enter the wrong command!\nPlease refill the preference form.`
+            );
+
+          case 3:
+            throw Error(`Token Not Found Session Token does not exist.`);
+
+          case 4:
+            throw Error(
+              `Token Empty Session Token has returned all possible questions for the specified query. Resetting the Token is necessary.`
+            );
+
+          case 5:
+            throw Error(`Rate Limit Too many requests have occurred.`);
+
+          default:
+            break;
+        }
+      } catch (err) {
+        console.log(err);
+      }
     };
 
     fetchQuizQues();
-  }, [quizQues]);
+  }, []);
 
   return (
     <>
@@ -35,7 +72,7 @@ const Quiz = () => {
 
           <section className={`mb-3 ${styles.questionCardSection}`}>
             <div className="container p-0">
-              <QuestionCard quizQues={quizQues} />
+              {quizQues && <QuestionCard quizQues={quizQues} />}
             </div>
           </section>
 
