@@ -1,6 +1,19 @@
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./Result.module.css";
 
 const Result = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const { totalQues, answered, correct, wrong } = location.state || {
+    totalQues: 0,
+    answered: 0,
+    correct: 0,
+    wrong: 0
+  };
+  const scoresPercent = (correct * 100) / totalQues || 0;
+  const completionRate = (answered * 100) / totalQues || 0;
+
   return (
     <>
       <main className={styles.result}>
@@ -10,7 +23,7 @@ const Result = () => {
               <div className={`${styles.scoresCardOuter}`}>
                 <div className={`${styles.scoresCardInner}`}>
                   <p className="text-white">Your Score</p>
-                  <p className="text-white">29/30</p>
+                  <p className="text-white">{scoresPercent}/100</p>
                 </div>
               </div>
             </section>
@@ -22,25 +35,30 @@ const Result = () => {
                     <div className="row justify-content-between row-cols-2 gy-3">
                       <div className={`col ${styles.scoresbreakdownItem}`}>
                         <p className="d-flex flex-column">
-                          <span>100%</span>
+                          <span>{completionRate}%</span>
                           <span>Completion</span>
                         </p>
                       </div>
+
                       <div className={`col ${styles.scoresbreakdownItem}`}>
                         <p className="d-flex flex-column">
-                          <span>20</span>
-                          <span>Total Questions</span>
-                        </p>
-                      </div>
-                      <div className={`col ${styles.scoresbreakdownItem}`}>
-                        <p className="d-flex flex-column">
-                          <span>13</span>
+                          <span className="text-success fw-bold">
+                            {correct}
+                          </span>
                           <span>Correct</span>
                         </p>
                       </div>
+
                       <div className={`col ${styles.scoresbreakdownItem}`}>
                         <p className="d-flex flex-column">
-                          <span>07</span>
+                          <span>{totalQues}</span>
+                          <span>Total Questions</span>
+                        </p>
+                      </div>
+
+                      <div className={`col ${styles.scoresbreakdownItem}`}>
+                        <p className="d-flex flex-column">
+                          <span className="text-danger fw-bold">{wrong}</span>
                           <span>Wrong</span>
                         </p>
                       </div>
@@ -53,17 +71,23 @@ const Result = () => {
             <section className={`${styles.ctaBtnsSection}`}>
               <div className="container">
                 <div className="d-flex justify-content-around flex-wrap gap-sm-5">
-                  <a href="#" className={`${styles.ctaItemLink}`}>
+                  <Link
+                    to={() => {
+                      navigate(-1);
+                    }}
+                    className={`${styles.ctaItemLink}`}
+                  >
                     <p>
                       <i
                         className={`fas fa-rotate-right ${styles.ctaItemIcon} ${styles.playAgain}`}
                         aria-hidden="true"
-                        title="Play Again"
+                        title="Replay"
                       ></i>
                     </p>
-                    <p className={`${styles.ctaItemText}`}>Play Again</p>
-                  </a>
-                  <a href="#" className={`${styles.ctaItemLink}`}>
+                    <p className={`${styles.ctaItemText}`}>Replay</p>
+                  </Link>
+
+                  <Link to="/" className={`${styles.ctaItemLink}`}>
                     <p>
                       <i
                         className={`fas fa-home ${styles.ctaItemIcon} ${styles.home}`}
@@ -72,8 +96,9 @@ const Result = () => {
                       ></i>
                     </p>
                     <p className={`${styles.ctaItemText}`}>Home</p>
-                  </a>
-                  <a href="#" className={`${styles.ctaItemLink}`}>
+                  </Link>
+
+                  <Link to="/leaderboard" className={`${styles.ctaItemLink}`}>
                     <p>
                       <i
                         className={`fas fa-trophy ${styles.ctaItemIcon} ${styles.leaderboard}`}
@@ -82,7 +107,7 @@ const Result = () => {
                       ></i>
                     </p>
                     <p className={`${styles.ctaItemText}`}>Leaderboard</p>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </section>
