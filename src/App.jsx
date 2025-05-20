@@ -5,6 +5,7 @@ import Result from "./pages/Result/Result.jsx";
 import Quiz from "./pages/Quiz/Quiz.jsx";
 import { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import NoPage from "./pages/NoPage/NoPage.jsx";
 
 function App() {
   const [isModalOpen, setisModalOpen] = useState(false);
@@ -25,6 +26,7 @@ function App() {
             <Route index element={<Home openModal={openModal} />}></Route>
             <Route path="/result" element={<Result />}></Route>
             <Route path="/quiz" element={<Quiz />}></Route>
+            <Route path="*" element={<NoPage />}></Route>
           </Route>
         </Routes>
         {isModalOpen && <PlayOptionsModal closeModal={closeModal} />}
