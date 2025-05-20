@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import QuestionCard from "../../components/QuestionCard/QuestionCard";
 import styles from "./Quiz.module.css";
 import { useEffect, useState } from "react";
+
 const Quiz = () => {
   const [searchParams] = useSearchParams();
   const noOfQuestion = searchParams.get("noOfQuestion");
@@ -9,8 +10,10 @@ const Quiz = () => {
   const difficulty = searchParams.get("difficulty");
   const questionType = searchParams.get("questionType");
 
+  const [allQuizQues, setAllQuizQues] = useState();
   const [quizQues, setQuizQues] = useState();
   const [isQuesLoading, setIsQuesLoading] = useState(true);
+  const [quesIndex, setQuesIndex] = useState(0);
 
   useEffect(() => {
     const categoryParam = categoryId ? `&category=${categoryId}` : "";
@@ -50,7 +53,9 @@ const Quiz = () => {
             break;
         }
 
-        setQuizQues(data.results);
+        setAllQuizQues(data.results);
+        const singleQues = getSingleQues(data.results);
+        setQuizQues(singleQues);
         setIsQuesLoading(false);
       } catch (err) {
         console.log(err);
@@ -60,6 +65,46 @@ const Quiz = () => {
     fetchQuizQues();
   }, [noOfQuestion, categoryId, difficulty, questionType]);
 
+  const getSingleQues = (allQuestions) => {
+    const quizQuesObj = allQuestions[quesIndex];
+    const currentQuesNo = quesIndex + 1;
+    const totalQuesNo = allQuestions.length;
+
+    // Destructure the options from the Object &
+    // Sort them in a random order
+    const {
+      incorrect_answers: incorrectAnswers,
+      correct_answer: correctAnswer
+    } = quizQuesObj;
+    const quizQuesOptions = [...incorrectAnswers, correctAnswer];
+    quizQuesOptions.sort(() => Math.random() - 0.5);
+
+    const singleQues = {
+      currentQuesNo,
+      totalQuesNo,
+      question: quizQuesObj.question,
+      options: quizQuesOptions,
+      category: quizQuesObj.category,
+      difficulty: quizQuesObj.difficulty,
+      type: quizQuesObj.type === "multiple" ? "Multiple Choice" : "True/False",
+      correctAnswer: quizQuesObj.correct_answer
+    };
+
+    return singleQues;
+  };
+
+  useEffect(() => {
+    if (allQuizQues && allQuizQues.length > 0) {
+      const singleQues = getSingleQues(allQuizQues);
+      setQuizQues(singleQues);
+      setIsQuesLoading(false);
+    }
+  }, [quesIndex]);
+
+  const handleNextQuestion = () => {
+    setQuesIndex((prev) => prev + 1);
+  };
+
   return (
     <>
       <main className={`${styles.quiz}`}>
@@ -68,36 +113,26 @@ const Quiz = () => {
             <div className="d-flex justify-content-center">
               <div className={`text-center`}>
                 <p>
-                  {categoryId || "Category Name"}{" "}
-                  <span>({difficulty || "Difficulty"})</span>
+                  {quizQues?.category || "Category Name"}{" "}
+                  <span>({quizQues?.difficulty || "Difficulty"})</span>
                 </p>
-                <p>{questionType || "Question Type"}</p>
+                <p>{quizQues?.type || "Question Type"}</p>
               </div>
             </div>
           </section>
 
-          <section className={`mb-3 ${styles.questionCardSection}`}>
+          <section className={`${styles.questionCardSection}`}>
             <div className="container p-0">
               {isQuesLoading ? (
                 "Question is Loading..."
-              ) : quizQues && quizQues.length > 0 ? (
-                <QuestionCard quizQues={quizQues} />
               ) : (
-                <p>No Question available. Try adjusting quiz preferences.</p>
+                <QuestionCard
+                  quizQues={quizQues}
+                  handleNextQuestion={handleNextQuestion}
+                />
               )}
             </div>
           </section>
-
-          <div className={`${styles.progressBtns}`}>
-            <div className="d-flex justify-content-end gap-3">
-              <button type="button" className={`btn ${styles.prevBtn}`}>
-                Previous
-              </button>
-              <button type="button" className={`btn ${styles.nextBtn}`}>
-                Next
-              </button>
-            </div>
-          </div>
         </div>
       </main>
     </>

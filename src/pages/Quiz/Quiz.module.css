@@ -1,9 +1,0 @@
-.progressBtns {
-  button {
-    background-color: var(--russian-violet);
-    color: var(--light-cyan);
-  }
-  button:hover {
-    opacity: 0.8;
-  }
-}
