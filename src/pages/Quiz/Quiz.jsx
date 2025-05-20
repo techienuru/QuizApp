@@ -13,6 +13,7 @@ const Quiz = () => {
   const [allQuizQues, setAllQuizQues] = useState();
   const [quizQues, setQuizQues] = useState();
   const [isQuesLoading, setIsQuesLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [quesIndex, setQuesIndex] = useState(0);
 
   useEffect(() => {
@@ -30,12 +31,12 @@ const Quiz = () => {
         switch (data.response_code) {
           case 1:
             throw Error(
-              `The API doesn't have enough questions for the category you selected!\nPlease reduce the number of Questions you inputed earlier`
+              `The API doesn't have enough questions for the category you selected! Please reduce the number of Questions you inputed earlier`
             );
 
           case 2:
             throw Error(
-              `You enter the wrong command!\nPlease refill the preference form.`
+              `You enter the wrong command! Please refill the preference form.`
             );
 
           case 3:
@@ -43,11 +44,13 @@ const Quiz = () => {
 
           case 4:
             throw Error(
-              `Token Empty Session Token has returned all possible questions for the specified query. Resetting the Token is necessary.`
+              `Token Empty Session: Token has returned all possible questions for the specified query. Resetting the Token is necessary.`
             );
 
           case 5:
-            throw Error(`Rate Limit Too many requests have occurred.`);
+            throw Error(
+              `Rate Limit: Too many requests have occurred. Please refresh!`
+            );
 
           default:
             break;
@@ -57,8 +60,18 @@ const Quiz = () => {
         const singleQues = getSingleQues(data.results);
         setQuizQues(singleQues);
         setIsQuesLoading(false);
+        setError(false);
       } catch (err) {
-        console.log(err);
+        console.log("Error occurred: ", err.message);
+        setIsQuesLoading(false);
+
+        if (err.message && err.message.includes("fetch")) {
+          setError("INTERNET DISCONNECTED! Please connect and reload the page");
+        } else {
+          setError(
+            err.message || "An unexpected error occurred. Please try again."
+          );
+        }
       }
     };
 
@@ -128,10 +141,21 @@ const Quiz = () => {
                   <div className={`${styles.loader}`}></div>
                 </div>
               ) : (
-                <QuestionCard
-                  quizQues={quizQues}
-                  handleNextQuestion={handleNextQuestion}
-                />
+                quizQues && (
+                  <QuestionCard
+                    quizQues={quizQues}
+                    handleNextQuestion={handleNextQuestion}
+                  />
+                )
+              )}
+              {error && (
+                <div
+                  className={`d-flex justify-content-center ${styles.errorContainer}`}
+                >
+                  <p className={`badge bg-danger p-5 ${styles.errorMessage}`}>
+                    {error}
+                  </p>
+                </div>
               )}
             </div>
           </section>

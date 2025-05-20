@@ -64,8 +64,6 @@ const QuestionCard = ({ quizQues, handleNextQuestion }) => {
     });
   };
 
-  console.log("Your scores is: ", scores);
-
   return (
     <>
       <div className={`card ${styles.questionCard}`}>
