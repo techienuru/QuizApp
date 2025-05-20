@@ -1,0 +1,27 @@
+.preloader {
+  width: 100%;
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader {
+  background-color: var(--light-cyan);
+  border: 16px solid var(--russian-violet);
+  border-top: 16px solid var(--prussian-blue);
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

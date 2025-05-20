@@ -124,7 +124,9 @@ const Quiz = () => {
           <section className={`${styles.questionCardSection}`}>
             <div className="container p-0">
               {isQuesLoading ? (
-                "Question is Loading..."
+                <div className={`${styles.preloader}`}>
+                  <div className={`${styles.loader}`}></div>
+                </div>
               ) : (
                 <QuestionCard
                   quizQues={quizQues}
