@@ -20,7 +20,6 @@ const PlayOptionsModal = ({ closeModal }) => {
       const totalQuestion = data.category_question_count.total_question_count;
       setMaxQuestion(totalQuestion);
     };
-    console.log("Use Effect runs!");
     if (categoryId) {
       fetchMaxQuestion();
     }
