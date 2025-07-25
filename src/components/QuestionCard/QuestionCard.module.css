@@ -12,22 +12,21 @@
     text-shadow: 0px 0px 1px var(--russian-violet);
     font-size: clamp(0.8375rem, 0.7654rem + 0.4767vw, 1.25rem);
   }
-  .timeRemaining {
-    text-shadow: 0px 0px 1px var(--russian-violet);
-    font-size: clamp(0.9375rem, 0.8654rem + 0.5767vw, 1.25rem);
-  }
   .scoreProgress {
-    background-color: var(--russian-violet);
-    width: 100px;
-
-    .scoreProgressBar {
-      background: var(--linear-gradient);
-    }
+    color: var(--russian-violet);
+    text-shadow: 0px 0px 1px var(--russian-violet);
+    font-size: clamp(0.8375rem, 0.7654rem + 0.4767vw, 1.25rem);
   }
-  .quitBtn {
-    font-size: clamp(0.9375rem, 0.8654rem + 0.5767vw, 1.25rem);
-    color: var(--rusty-red);
+  .getHintBtn {
+    /* font-size: clamp(0.9375rem, 0.8654rem + 0.5767vw, 1.2rem); */
+    background: var(--linear-gradient);
+    box-shadow: 0px 0px 1px var(--russian-violet);
+    border: none;
+    outline: none;
+    color: #ffffff;
     text-shadow: 0px 0px 1px var(--rusty-red);
+    padding: 0.4rem 1rem;
+    transition: transform 0.5s ease-in-out;
   }
 }
 
@@ -40,6 +39,13 @@
       font-weight: bolder;
       text-shadow: 0px 0px 0.5px var(--rusty-red);
     }
+  }
+  .hintBox {
+    background-color: var(--russian-violet);
+    color: var(--light-cyan);
+    padding: 5px 10px;
+    margin-bottom: 1rem;
+    border-radius: 10px;
   }
   .options {
     .formCheck {

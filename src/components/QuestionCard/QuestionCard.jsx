@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
 import styles from "./QuestionCard.module.css";
 import { useNavigate } from "react-router-dom";
+import useGetHint from "../../hooks/useGetHint";
+import useTranslate from "../../hooks/useTranslate";
 
-const QuestionCard = ({ quizQues, handleNextQuestion }) => {
+const QuestionCard = ({
+  quizQues,
+  handleNextQuestion,
+  allQuizQues,
+  setQuizQues,
+}) => {
   const navigate = useNavigate();
   const { currentQuesNo, totalQuesNo, question, options, correctAnswer } =
     quizQues;
@@ -10,12 +17,32 @@ const QuestionCard = ({ quizQues, handleNextQuestion }) => {
   const [scores, setScores] = useState({
     answered: 0,
     correct: 0,
-    wrong: 0
+    wrong: 0,
   });
   const [selectedOption, setSelectedOption] = useState("");
   const [isAnswered, setIsAnswered] = useState(false);
   const [isLastQues, setIsLastQues] = useState(false);
   const [answerFeedback, setAnswerFeedback] = useState(null);
+  const [srcLang, setSrcLang] = useState("en_XX");
+  const [tgtLang, setTgtLang] = useState("en_XX");
+
+  const { isHintLoading, hintData, setHintData, getHint } = useGetHint();
+  const { translateBatch, mbart50Languages, isLangLoading } = useTranslate();
+
+  useEffect(() => {
+    if (srcLang === "en_XX" && tgtLang === "en_XX") return;
+
+    const loadTranslation = async () => {
+      const translatedQues = await translateBatch(
+        allQuizQues,
+        quizQues,
+        srcLang,
+        tgtLang
+      );
+      setQuizQues(translatedQues);
+    };
+    loadTranslation();
+  }, [tgtLang]);
 
   useEffect(() => {
     if (currentQuesNo === totalQuesNo) {
@@ -34,23 +61,23 @@ const QuestionCard = ({ quizQues, handleNextQuestion }) => {
       setScores((prev) => ({
         answered: prev.answered + 1,
         correct: prev.correct + 1,
-        wrong: prev.wrong
+        wrong: prev.wrong,
       }));
       setAnswerFeedback({
         firstFeedback: "correct",
-        secondFeedback: correctAnswer
+        secondFeedback: correctAnswer,
       });
     } else {
       setScores((prev) => {
         return {
           answered: prev.answered + 1,
           correct: prev.correct,
-          wrong: prev.wrong + 1
+          wrong: prev.wrong + 1,
         };
       });
       setAnswerFeedback({
         firstFeedback: "wrong",
-        secondFeedback: correctAnswer
+        secondFeedback: correctAnswer,
       });
     }
   };
@@ -59,8 +86,8 @@ const QuestionCard = ({ quizQues, handleNextQuestion }) => {
     navigate("/result", {
       state: {
         ...scores,
-        totalQues: totalQuesNo
-      }
+        totalQues: totalQuesNo,
+      },
     });
   };
 
@@ -72,16 +99,38 @@ const QuestionCard = ({ quizQues, handleNextQuestion }) => {
             <p className={`${styles.questionNo}`}>
               Question: {currentQuesNo}/{totalQuesNo}
             </p>
-            <p className={`${styles.timeRemaining}`}>00:00</p>
             <div className={`${styles.scoreProgress}`}>
-              <div
-                className={`${styles.scoreProgressBar}`}
-                style={{
-                  width: `${(scores.correct * 100) / totalQuesNo || 0}%`,
-                  height: "30px"
-                }}
-              ></div>
+              Score: {`${(scores.correct * 100) / totalQuesNo || 0}%`}
             </div>
+            <div>
+              <button
+                className={`btn ${styles.getHintBtn}`}
+                onClick={() => {
+                  getHint(question, options, correctAnswer);
+                }}
+                disabled={isHintLoading}
+              >
+                {isHintLoading ? "Loading..." : "Get Hint"}
+              </button>
+            </div>
+          </div>
+          <div className="d-flex justify-content-center">
+            <select
+              className="form-control w-50"
+              id="lang-list"
+              value={tgtLang}
+              onChange={(e) => {
+                setSrcLang(tgtLang);
+                setTgtLang(e.target.value);
+              }}
+            >
+              {mbart50Languages.map((l) => (
+                <option value={l.code} key={l.code}>
+                  {l.language}
+                </option>
+              ))}
+            </select>
+            <p>{isLangLoading && "Loading..."}</p>
           </div>
         </div>
         <div className={`card-body ${styles.questionCardBody}`}>
@@ -90,6 +139,9 @@ const QuestionCard = ({ quizQues, handleNextQuestion }) => {
               <span>Q: </span>
               {question}?
             </label>
+            {hintData && (
+              <article className={`${styles.hintBox}`}>{hintData}</article>
+            )}
             <article className={`${styles.options}`}>
               {options.map((option, index) => (
                 <div className={`form-check ${styles.formCheck}`} key={index}>
@@ -151,6 +203,7 @@ const QuestionCard = ({ quizQues, handleNextQuestion }) => {
                 setSelectedOption("");
                 setIsAnswered(false);
                 setAnswerFeedback(null);
+                setHintData(null);
               }}
             >
               Next

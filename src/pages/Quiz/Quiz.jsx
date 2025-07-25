@@ -26,9 +26,11 @@ const Quiz = () => {
         const res = await fetch(
           `https://opentdb.com/api.php?amount=${noOfQuestion}${categoryParam}${difficultyParam}${questionTypeParam}`
         );
-        const data = await res.json();
+        const { results, response_code } = await res.json();
 
-        switch (data.response_code) {
+        // if (response_code !== 0) throw new Error("API error: code " + response_code);
+
+        switch (response_code) {
           case 1:
             throw Error(
               `The API doesn't have enough questions for the category you selected! Please reduce the number of Questions you inputed earlier`
@@ -55,15 +57,13 @@ const Quiz = () => {
           default:
             break;
         }
+        setAllQuizQues(results);
 
-        setAllQuizQues(data.results);
-        const singleQues = getSingleQues(data.results);
+        const singleQues = getSingleQues(results);
         setQuizQues(singleQues);
-        setIsQuesLoading(false);
         setError(false);
       } catch (err) {
-        console.log("Error occurred: ", err.message);
-        setIsQuesLoading(false);
+        console.error("Error occurred: ", err.message);
 
         if (err.message && err.message.includes("fetch")) {
           setError("INTERNET DISCONNECTED! Please connect and reload the page");
@@ -72,11 +72,22 @@ const Quiz = () => {
             err.message || "An unexpected error occurred. Please try again."
           );
         }
+      } finally {
+        setIsQuesLoading(false);
       }
     };
 
     fetchQuizQues();
   }, [noOfQuestion, categoryId, difficulty, questionType]);
+
+  // Change Question when "next" button is clicked
+  useEffect(() => {
+    if (allQuizQues && allQuizQues.length > 0) {
+      const singleQues = getSingleQues(allQuizQues);
+      setQuizQues(singleQues);
+      setIsQuesLoading(false);
+    }
+  }, [quesIndex]);
 
   const getSingleQues = (allQuestions) => {
     const quizQuesObj = allQuestions[quesIndex];
@@ -87,7 +98,7 @@ const Quiz = () => {
     // Sort them in a random order
     const {
       incorrect_answers: incorrectAnswers,
-      correct_answer: correctAnswer
+      correct_answer: correctAnswer,
     } = quizQuesObj;
     const quizQuesOptions = [...incorrectAnswers, correctAnswer];
     quizQuesOptions.sort(() => Math.random() - 0.5);
@@ -100,19 +111,11 @@ const Quiz = () => {
       category: quizQuesObj.category,
       difficulty: quizQuesObj.difficulty,
       type: quizQuesObj.type === "multiple" ? "Multiple Choice" : "True/False",
-      correctAnswer: quizQuesObj.correct_answer
+      correctAnswer: quizQuesObj.correct_answer,
     };
 
     return singleQues;
   };
-
-  useEffect(() => {
-    if (allQuizQues && allQuizQues.length > 0) {
-      const singleQues = getSingleQues(allQuizQues);
-      setQuizQues(singleQues);
-      setIsQuesLoading(false);
-    }
-  }, [quesIndex]);
 
   const handleNextQuestion = () => {
     setQuesIndex((prev) => prev + 1);
@@ -145,6 +148,8 @@ const Quiz = () => {
                   <QuestionCard
                     quizQues={quizQues}
                     handleNextQuestion={handleNextQuestion}
+                    allQuizQues={allQuizQues}
+                    setQuizQues={setQuizQues}
                   />
                 )
               )}
