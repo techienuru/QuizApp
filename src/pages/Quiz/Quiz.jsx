@@ -1,84 +1,117 @@
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import QuestionCard from "../../components/QuestionCard/QuestionCard";
 import styles from "./Quiz.module.css";
 import { useEffect, useState } from "react";
+import useGenerateQuestionsFromText from "../../hooks/useGenerateQuestionsFromText";
 
 const Quiz = () => {
+  const { state } = useLocation();
+
+  const { generateQuestionsFromText } = useGenerateQuestionsFromText();
+
+  // Params Variables
   const [searchParams] = useSearchParams();
   const noOfQuestion = searchParams.get("noOfQuestion");
   const categoryId = searchParams.get("categoryId");
   const difficulty = searchParams.get("difficulty");
   const questionType = searchParams.get("questionType");
 
-  const [allQuizQues, setAllQuizQues] = useState();
-  const [quizQues, setQuizQues] = useState();
-  const [isQuesLoading, setIsQuesLoading] = useState(true);
-  const [error, setError] = useState(false);
+  // Questions State
+  const [allQuizQues, setAllQuizQues] = useState(null);
+  const [quizQues, setQuizQues] = useState(null);
   const [quesIndex, setQuesIndex] = useState(0);
 
+  // Loading & error state
+  const [isQuesLoading, setIsQuesLoading] = useState(false);
+  const [error, setError] = useState(false);
+
   useEffect(() => {
-    const categoryParam = categoryId ? `&category=${categoryId}` : "";
-    const difficultyParam = difficulty ? `&difficulty=${difficulty}` : "";
-    const questionTypeParam = questionType ? `&type=${questionType}` : "";
-
-    const fetchQuizQues = async () => {
-      try {
-        const res = await fetch(
-          `https://opentdb.com/api.php?amount=${noOfQuestion}${categoryParam}${difficultyParam}${questionTypeParam}`
-        );
-        const { results, response_code } = await res.json();
-
-        // if (response_code !== 0) throw new Error("API error: code " + response_code);
-
-        switch (response_code) {
-          case 1:
-            throw Error(
-              `The API doesn't have enough questions for the category you selected! Please reduce the number of Questions you inputed earlier`
-            );
-
-          case 2:
-            throw Error(
-              `You enter the wrong command! Please refill the preference form.`
-            );
-
-          case 3:
-            throw Error(`Token Not Found Session Token does not exist.`);
-
-          case 4:
-            throw Error(
-              `Token Empty Session: Token has returned all possible questions for the specified query. Resetting the Token is necessary.`
-            );
-
-          case 5:
-            throw Error(
-              `Rate Limit: Too many requests have occurred. Please refresh!`
-            );
-
-          default:
-            break;
-        }
-        setAllQuizQues(results);
-
-        const singleQues = getSingleQues(results);
-        setQuizQues(singleQues);
-        setError(false);
-      } catch (err) {
-        console.error("Error occurred: ", err.message);
-
-        if (err.message && err.message.includes("fetch")) {
-          setError("INTERNET DISCONNECTED! Please connect and reload the page");
-        } else {
-          setError(
-            err.message || "An unexpected error occurred. Please try again."
+    if (state?.generated && state.sourceText) {
+      (async () => {
+        setIsQuesLoading(true);
+        try {
+          const questions = await generateQuestionsFromText(
+            state.sourceText,
+            state.noOfQuestions
           );
-        }
-      } finally {
-        setIsQuesLoading(false);
-      }
-    };
 
-    fetchQuizQues();
-  }, [noOfQuestion, categoryId, difficulty, questionType]);
+          setAllQuizQues(questions);
+        } catch (err) {
+          console.error("Error generating questions: ", err);
+          setError(
+            err?.message ||
+              "Unable to Load questions from Hugging face API. Reason: Payment required"
+          );
+        } finally {
+          setIsQuesLoading(false);
+        }
+      })();
+    } else {
+      const categoryParam = categoryId ? `&category=${categoryId}` : "";
+      const difficultyParam = difficulty ? `&difficulty=${difficulty}` : "";
+      const questionTypeParam = questionType ? `&type=${questionType}` : "";
+
+      const fetchQuizQues = async () => {
+        try {
+          const res = await fetch(
+            `https://opentdb.com/api.php?amount=${noOfQuestion}${categoryParam}${difficultyParam}${questionTypeParam}`
+          );
+          const { results, response_code } = await res.json();
+
+          // if (response_code !== 0) throw new Error("API error: code " + response_code);
+
+          switch (response_code) {
+            case 1:
+              throw Error(
+                `The API doesn't have enough questions for the category you selected! Please reduce the number of Questions you inputed earlier`
+              );
+
+            case 2:
+              throw Error(
+                `You enter the wrong command! Please refill the preference form.`
+              );
+
+            case 3:
+              throw Error(`Token Not Found Session Token does not exist.`);
+
+            case 4:
+              throw Error(
+                `Token Empty Session: Token has returned all possible questions for the specified query. Resetting the Token is necessary.`
+              );
+
+            case 5:
+              throw Error(
+                `Rate Limit: Too many requests have occurred. Please refresh!`
+              );
+
+            default:
+              break;
+          }
+          setAllQuizQues(results);
+
+          const singleQues = getSingleQues(results);
+          setQuizQues(singleQues);
+          setError(false);
+        } catch (err) {
+          console.error("Error occurred: ", err.message);
+
+          if (err.message && err.message.includes("fetch")) {
+            setError(
+              "INTERNET DISCONNECTED! Please connect and reload the page"
+            );
+          } else {
+            setError(
+              err.message || "An unexpected error occurred. Please try again."
+            );
+          }
+        } finally {
+          setIsQuesLoading(false);
+        }
+      };
+
+      fetchQuizQues();
+    }
+  }, [state]);
 
   // Change Question when "next" button is clicked
   useEffect(() => {
@@ -87,7 +120,7 @@ const Quiz = () => {
       setQuizQues(singleQues);
       setIsQuesLoading(false);
     }
-  }, [quesIndex]);
+  }, [allQuizQues, quesIndex]);
 
   const getSingleQues = (allQuestions) => {
     const quizQuesObj = allQuestions[quesIndex];
@@ -139,20 +172,20 @@ const Quiz = () => {
 
           <section className={`${styles.questionCardSection}`}>
             <div className="container p-0">
-              {isQuesLoading ? (
+              {isQuesLoading && (
                 <div className={`${styles.preloader}`}>
                   <div className={`${styles.loader}`}></div>
                 </div>
-              ) : (
-                quizQues && (
-                  <QuestionCard
-                    quizQues={quizQues}
-                    handleNextQuestion={handleNextQuestion}
-                    allQuizQues={allQuizQues}
-                    setQuizQues={setQuizQues}
-                  />
-                )
               )}
+              {quizQues && (
+                <QuestionCard
+                  quizQues={quizQues}
+                  handleNextQuestion={handleNextQuestion}
+                  allQuizQues={allQuizQues}
+                  setQuizQues={setQuizQues}
+                />
+              )}
+
               {error && (
                 <div
                   className={`d-flex justify-content-center ${styles.errorContainer}`}

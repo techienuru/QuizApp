@@ -28,6 +28,7 @@ const useGetHint = () => {
     );
 
     const result = await response.json();
+    if (!response.ok) throw new Error(result.error.message);
 
     return result.choices[0].message.content;
   };
@@ -44,7 +45,10 @@ const useGetHint = () => {
       setHintData(response);
     } catch (err) {
       console.error("Error getting hint: ", err);
-      setHintData("Sorry, couldn't generate a hint right now.");
+      setHintData(
+        err.message ||
+          "Sorry, couldn't generate a hint right now. Payment required"
+      );
     } finally {
       setIsHintLoading(false);
     }

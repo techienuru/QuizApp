@@ -12,6 +12,7 @@
   "dependencies": {
     "@huggingface/inference": "^4.5.3",
     "bootstrap": "^5.3.6",
+    "pdfjs-dist": "^5.4.54",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.0"

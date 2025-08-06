@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "./PlayOptionsModal.module.css";
 import { useNavigate } from "react-router-dom";
 
-const PlayOptionsModal = ({ closeModal }) => {
+const PlayOptionsModal = ({ setisModalOpen }) => {
   const [categoryId, setCategoryId] = useState("");
   const [maxQuestion, setMaxQuestion] = useState(50);
   const [noOfQuestion, setNoOfQuestion] = useState(10);
@@ -31,7 +31,7 @@ const PlayOptionsModal = ({ closeModal }) => {
     navigate(
       `/quiz?noOfQuestion=${noOfQuestion}&categoryId=${categoryId}&difficulty=${difficulty}&questionType=${questionType}`
     );
-    closeModal();
+    setisModalOpen(false);
   };
 
   return (
@@ -45,7 +45,7 @@ const PlayOptionsModal = ({ closeModal }) => {
             <button
               type="button"
               className={`btn btn-close ${styles.closeBtn}`}
-              onClick={closeModal}
+              onClick={() => setisModalOpen(false)}
             ></button>
           </div>
           <form className={styles.form} onSubmit={handleSubmit}>
