@@ -100,7 +100,8 @@ const QuestionCard = ({
               Question: {currentQuesNo}/{totalQuesNo}
             </p>
             <div className={`${styles.scoreProgress}`}>
-              Score: {`${(scores.correct * 100) / totalQuesNo || 0}%`}
+              Score:{" "}
+              {`${((scores.correct * 100) / totalQuesNo).toFixed(2) || 0}%`}
             </div>
             <div>
               <button

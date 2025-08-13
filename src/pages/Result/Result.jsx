@@ -9,9 +9,9 @@ const Result = () => {
     totalQues: 0,
     answered: 0,
     correct: 0,
-    wrong: 0
+    wrong: 0,
   };
-  const scoresPercent = (correct * 100) / totalQues || 0;
+  const scoresPercent = ((correct * 100) / totalQues).toFixed(2) || 0;
   const completionRate = (answered * 100) / totalQues || 0;
 
   return (
