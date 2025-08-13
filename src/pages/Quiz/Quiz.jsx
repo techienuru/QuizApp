@@ -52,6 +52,8 @@ const Quiz = () => {
       const questionTypeParam = questionType ? `&type=${questionType}` : "";
 
       const fetchQuizQues = async () => {
+        setIsQuesLoading(true);
+        setError(false);
         try {
           const res = await fetch(
             `https://opentdb.com/api.php?amount=${noOfQuestion}${categoryParam}${difficultyParam}${questionTypeParam}`
