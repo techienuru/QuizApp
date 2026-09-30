@@ -1,6 +1,13 @@
+:global(html) {
+  scroll-behavior: smooth;
+}
+
+.page {
+  background-color: var(--russian-violet);
+}
+
 .container {
-  min-height: 100vh;
-  /* background-color: var(--light-cyan); */
+  min-height: calc(100vh - 72px);
   background-color: var(--russian-violet);
   .card {
     max-width: 60vw;
@@ -49,4 +56,118 @@
   100% {
     transform: scale(1);
   }
+}
+
+.section {
+  padding: 5rem 1rem;
+  text-align: center;
+  scroll-margin-top: 72px;
+}
+
+.sectionTitle {
+  color: #ffffff;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin-bottom: 0.5rem;
+}
+
+.sectionSubtitle {
+  color: #e0e0e0af;
+  font-size: 1.05rem;
+  margin-bottom: 3rem;
+}
+
+.steps,
+.ways,
+.reasons {
+  display: grid;
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.steps {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.ways {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.reasons {
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.step,
+.wayCard,
+.reason {
+  background-color: rgba(218, 245, 255, 0.05);
+  border: 1px solid rgba(218, 245, 255, 0.15);
+  border-radius: 1rem;
+  text-align: left;
+}
+
+.step {
+  padding: 2rem 1.5rem;
+}
+
+.wayCard {
+  padding: 2rem;
+}
+
+.reason {
+  padding: 1.75rem 1.25rem;
+}
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  background: var(--linear-gradient);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.stepTitle,
+.wayTitle,
+.reasonTitle {
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.stepTitle,
+.wayTitle {
+  font-size: 1.15rem;
+}
+
+.reasonTitle {
+  font-size: 1.05rem;
+}
+
+.stepText,
+.wayText,
+.reasonText {
+  color: #e0e0e0af;
+  margin: 0;
+}
+
+.reasonText {
+  font-size: 0.95rem;
+}
+
+.footer {
+  padding: 2rem 1rem;
+  text-align: center;
+  background-color: var(--russian-violet);
+  border-top: 1px solid rgba(218, 245, 255, 0.15);
+}
+
+.footerText {
+  color: #e0e0e0af;
+  font-size: 0.9rem;
+  margin: 0;
 }
